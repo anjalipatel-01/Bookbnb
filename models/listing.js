@@ -10,14 +10,15 @@ const listingSchema = new Schema({
     image: {
         filename: String,
         url: String,  
-        //if the image is undefined
-        // default:"https://unsplash.com/photos/sunloungers-fronting-buildings-near-mountain-DGa0LQ0yDPc",
-        // //setting default image is empty 
-        // set: (v)=> v ==="" ? "https://unsplash.com/photos/sunloungers-fronting-buildings-near-mountain-DGa0LQ0yDPc":v,
+
     },
     price:Number,
     location : String,
     country:String,
+    reviews:[{
+        type: Schema.Types.ObjectId,
+        ref : "Reviews",
+    }]
 });
 const Listing = mongoose.model("Listing",listingSchema);
 module.exports=Listing;
