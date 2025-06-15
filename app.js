@@ -3,13 +3,20 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const  ejs = require("ejs");
-const Listing = require("./models/listing.js");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsmate = require("ejs-mate");
-const wrapAsync =  require("./utils/wrapAsync.js");
 const ExpressError =  require("./utils/ExpressError.js");
-const Reviews = require("./models/review.js");
+const session = require("express-session");
+const flash = require("connect-flash");
+const passport = require("passport");
+const localStrategy = require("passport-local");
+const User = require("./Models/user.js");
+
+const listingsRouter = require("./routes/listing.js");
+const reviewsRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
+
 //establishing database connection
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 main().then(()=>{
@@ -28,73 +35,41 @@ app.use(methodOverride('_method'));
 app.engine("ejs",ejsmate);
 app.use(express.static(path.join(__dirname,"/public")));
 
-//basic api request
-app.get("/",(req,res)=>{
-    res.send("hi i am root");
-});
-//route the listings
-//index route
-app.get("/listings", wrapAsync (async (req,res)=>{
-   const alllisting = await Listing.find({}); 
-   res.render("listings/index.ejs",{alllisting});    
-})
-);
-//new route
-app.get("/listings/new", (req,res)=>{
-    res.render("listings/newlisting.ejs");
-});
-//show route
-app.get("/listings/:id", wrapAsync( async(req,res)=>{
-    let {id} =  req.params;
-    const listing = await Listing.findById(id);
-    res.render("listings/show.ejs",{listing});
-})
-);
-//route to create a new listing then add among other listings 
-//create route
-    app.post("/listings",wrapAsync (async(req,res)=>{
-        const newlisting = new Listing(req.body.listing);
-        await newlisting.save();
-         res.redirect("/listings");
-    })
-    );
-//edit route
-app.get("/listings/:id/edit", wrapAsync(async(req,res)=>{
-    if(!req.body.listing){
-        throw new ExpressError(400,"Send valid data for Listing");          
-    }
-    let {id} =  req.params;
-    const listing = await Listing.findById(id);
-    res.render("listings/edit.ejs",{listing});
-})
-);
-//update route 
-app.put("/listings/:id", wrapAsync(async(req,res)=>{
-    let {id} =  req.params;
-   await Listing.findByIdAndUpdate(id,{...req.body.listing});
-   res.redirect("/listings");
-})
-);
-//delete route
-app.delete("/listings/:id",wrapAsync(async(req,res)=>{
-    let {id} =  req.params;
-    await Listing.findByIdAndDelete(id);
-    res.redirect("/listings");
+const sessionOptions = {
+    secret: "mysupersecretcode",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires : Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+    },
+}
 
-})
-);
-// <--review route-->
-app.post("/listings/:id/reviews", async(req,res)=>{
-    let listing = await Listing.findById(req.params.id);
-    let newreview = new Reviews(req.body.review);
-    listing.reviews.push(newreview);
-    await newreview.save();
-    await listing.save();
-    console.log("new review saved");
-    res.send("review saved");
-
-
+app.get("/", (req,res)=>{
+    res.send("Hi, i am root");
 });
+
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use((req,res,next)=>{
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    res.locals.curruser = req.user;
+    next();
+});
+
+app.use("/listings", listingsRouter);
+app.use("/listingd/:id/reviews",reviewsRouter);
+app.use("/",userRouter);
     
 //if user access a page whose route is not defined
 app.all(/(.*)/, (req,res,next)=>{
@@ -102,12 +77,10 @@ app.all(/(.*)/, (req,res,next)=>{
 });
 // MIDDLEWARE FOR ERROR 
 app.use((err,req,res,next)=>{
-    let {statuscode=500,message = "something went wrong"} = err;
-    res.render("error.ejs");
+    let {statusCode=500,message = "something went wrong"} = err;
+    res.status(statusCode).render("error.ejs",{message});
     // res.status(statuscode).send(message);
 });
-
-
 
 //starting your server
 app.listen(8080,()=>{
