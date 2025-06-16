@@ -1,3 +1,8 @@
+if(process.env.NODE_ENV != "production"){
+    require('dotenv').config();
+    console.log(process.env);
+}
+
 //require packages 
 const express = require("express");
 const app = express();
@@ -6,13 +11,11 @@ const  ejs = require("ejs");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsmate = require("ejs-mate");
-const ExpressError =  require("./utils/ExpressError.js");
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
 const localStrategy = require("passport-local");
 const User = require("./Models/user.js");
-
 const listingsRouter = require("./routes/listing.js");
 const reviewsRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
@@ -68,7 +71,7 @@ app.use((req,res,next)=>{
 });
 
 app.use("/listings", listingsRouter);
-app.use("/listingd/:id/reviews",reviewsRouter);
+app.use("/listings/:id/reviews",reviewsRouter);
 app.use("/",userRouter);
     
 //if user access a page whose route is not defined
