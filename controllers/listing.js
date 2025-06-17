@@ -1,4 +1,5 @@
 const Listing = require("../models/listing");
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 
 module.exports.index = async (req, res)=>{
         const alllisting = await Listing.find({}); 
@@ -40,7 +41,9 @@ module.exports.editListing = async(req,res)=>{
         req.flash("error", "Listing not found");
         return res.redirect("/listings");
         }
-        res.render("listings/edit.ejs", { listing });
+        let imageUrl = listing.image.url;
+         imageUrl = imageUrl.replace("/upload","/upload/h_300,w_250")
+        res.render("listings/edit.ejs", { listing, imageUrl });
 };
 
 module.exports.updateListing = async(req,res)=>{
