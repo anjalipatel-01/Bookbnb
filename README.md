@@ -7,14 +7,15 @@ BookBnB is a replica of the popular Airbnb platform, developed as a practice pro
 
 - Browse property listings
 - Detailed listing pages
-- Search and filter options
 - Responsive design
 - Interactive UI components
 - Simulated booking flow (optional)
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: HTML, CSS, JavaScript, React.js
+- **Frontend**: HTML, CSS, JavaScript, EJS
+- **Backened**: Node.js, Express.js
+- **Database**: MongoDB
 - **Deployment**: GitHub
 
   ## Notes
