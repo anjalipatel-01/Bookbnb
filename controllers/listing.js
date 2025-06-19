@@ -2,8 +2,15 @@ const Listing = require("../models/listing");
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 
 module.exports.index = async (req, res)=>{
-        const alllisting = await Listing.find({}); 
-        res.render("listings/index.ejs", {alllisting});    
+     const { category } = req.query;
+     let alllisting;
+     if (category) {
+        alllisting = await Listing.find({ category });
+    } else {
+        alllisting = await Listing.find({});
+    }
+    res.render("listings/index.ejs", { alllisting, category: category || "All" });
+
 };
 
 module.exports.renderNewForm = (req,res)=>{
@@ -71,3 +78,8 @@ module.exports.destroyListing = async(req,res)=>{
         req.flash("success","Listing Deleted!");
         res.redirect("/listings");
   };
+  module.exports.listByCategory = async (req, res) => {
+    const { category } = req.params;
+    const listings = await Listing.find({ category: { $regex: new RegExp(`^${category}$`, "i") } });
+    res.render("listings/index", { listings, category });
+};

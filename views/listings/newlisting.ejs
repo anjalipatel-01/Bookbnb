@@ -7,43 +7,65 @@
                 <h3>Create New Listing</h3>
 
                 <div class="mb-3">
-                    <label for="title" class="form-label">Title</label>
-                    <input name="listing[title]" type="text" placeholder="Enter title" required class="form-control"/>
-                    <div class="invalid-feedback">Enter valid Title</div>
-                </div>
+    <label for="title" class="form-label">Title</label>
+    <input name="listing[title]" type="text" placeholder="Enter title" required class="form-control"/>
+    <div class="invalid-feedback">Enter valid Title</div>
+</div>
 
-                <div class="mb-3">
-                    <label for="description" class="form-label">Description</label>
-                    <textarea name="listing[description]" type="text" class="form-control" required placeholder="Enter description"></textarea>
-                    <div class="invalid-feedback">Enter valid Description</div>
-                </div>
+<div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <textarea name="listing[description]" type="text" class="form-control" required placeholder="Enter description"></textarea>
+    <div class="invalid-feedback">Enter valid Description</div>
+</div>
 
-                <div class="mb-3">
-                    <label for="price" class="form-label">Price</label>
-                    <input name="listing[price]" type="number" class="form-control" required placeholder="Enter price"/>
-                     <div class="invalid-feedback">Enter valid Price</div>
-                </div>
-                <div class="mb-3">
-                    <label for="image" class="form-label">Image</label>
-                    <input name="listing[image]" type="file" class="form-control" required />
-                </div>
+<div class="mb-3">
+    <label for="price" class="form-label">Price</label>
+    <input name="listing[price]" type="number" class="form-control" required placeholder="Enter price"/>
+    <div class="invalid-feedback">Enter valid Price</div>
+</div>
 
-                <div class="row">
-                    <div class="mb-3 col-md-4">
-                        <label for="location" class="form-label">Location</label>
-                        <input name="listing[location]" type="text" class="form-control" required placeholder="Enter location"/>
-                        <div class="invalid-feedback">Enter valid Location</div>
-                    </div>
+<!-- ✅ CATEGORY DROPDOWN STARTS HERE -->
+<div class="mb-3">
+    <label for="category" class="form-label">Category</label>
+    <select name="listing[category]" id="category" class="form-select" required>
+        <option disabled selected value="">Choose category</option>
+        <option value="trending">Trending</option>
+        <option value="rooms">Rooms</option>
+        <option value="iconic-cities">Iconic Cities</option>
+        <option value="mountains">Mountains</option>
+        <option value="castles">Castles</option>
+        <option value="amazing-pools">Amazing Pools</option>
+        <option value="camping">Camping</option>
+        <option value="farms">Farms</option>
+        <option value="arctic">Arctic</option>
+        <option value="domes">Domes</option>
+        <option value="play">Play</option>
+    </select>
+    <div class="invalid-feedback">Select a valid category</div>
+</div>
+<!-- ✅ CATEGORY DROPDOWN ENDS HERE -->
 
-                    <div class="mb-3 col-md-8">
-                        <label for="country" class="form-label">Country</label>
-                        <input name="listing[country]" type="text" class="form-control" required placeholder="Enter country"/>
-                        <div class="invalid-feedback">Enter valid Country</div>
-                    </div>
-                </div>
+<div class="mb-3">
+    <label for="image" class="form-label">Image</label>
+    <input name="listing[image]" type="file" class="form-control" required />
+</div>
 
-                <button class="btn btn-dark add-btn">Add Listing</button>
-                <br/><br/>
+<div class="row">
+    <div class="mb-3 col-md-4">
+        <label for="location" class="form-label">Location</label>
+        <input name="listing[location]" type="text" class="form-control" required placeholder="Enter location"/>
+        <div class="invalid-feedback">Enter valid Location</div>
+    </div>
+
+    <div class="mb-3 col-md-8">
+        <label for="country" class="form-label">Country</label>
+        <input name="listing[country]" type="text" class="form-control" required placeholder="Enter country"/>
+        <div class="invalid-feedback">Enter valid Country</div>
+    </div>
+</div>
+
+    <button class="btn btn-dark add-btn mb-3">Add Listing</button>
+
             </form>
         </div>
     </div>

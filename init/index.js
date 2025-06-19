@@ -14,10 +14,15 @@ async function main(){
     await mongoose.connect(MONGO_URL);
 }
 
-const init_db = async()=>{
-    await Listing.deleteMany({});
-    initdata.data = initdata.data.map((obj)=>({...obj, owner:"684d0bb0b01c09f90248b0cf"}));
-    await Listing.insertMany(initdata.data);
-    console.log("Data was intialised");
+const init_db = async () => {
+  await Listing.deleteMany({});
+  initdata.data = initdata.data.map((obj) => ({
+    ...obj,
+    owner: "684d0bb0b01c09f90248b0cf",
+    category: obj.category || "trending" // ✅ Fix here
+  }));
+  await Listing.insertMany(initdata.data);
+  console.log("✅ Data was initialized");
 };
+
 init_db();

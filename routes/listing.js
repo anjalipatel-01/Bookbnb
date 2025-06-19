@@ -19,6 +19,7 @@ router.route("/")
         validateListing,
         wrapAsync (listingController.createListing)
     );
+router.get("/category/:category", wrapAsync(listingController.listByCategory));
 
 router.route("/:id")
     .get(wrapAsync(listingController.showlisting)) //show route
